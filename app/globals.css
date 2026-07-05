@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f6f8f4;
+  --foreground: #16281d;
+
+  --color-fairway-50: #f1f8f1;
+  --color-fairway-100: #dcedd9;
+  --color-fairway-200: #b8dbb3;
+  --color-fairway-300: #8bc382;
+  --color-fairway-400: #5da755;
+  --color-fairway-500: #3f8a38;
+  --color-fairway-600: #2f6e2b;
+  --color-fairway-700: #275624;
+  --color-fairway-800: #22451f;
+  --color-fairway-900: #1c391b;
+
+  --color-sky-50: #f0f8fb;
+  --color-sky-400: #63b3d8;
+
+  --color-sand-100: #f4ecd8;
+  --color-sand-300: #e3d0a3;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-fairway-50: var(--color-fairway-50);
+  --color-fairway-100: var(--color-fairway-100);
+  --color-fairway-200: var(--color-fairway-200);
+  --color-fairway-300: var(--color-fairway-300);
+  --color-fairway-400: var(--color-fairway-400);
+  --color-fairway-500: var(--color-fairway-500);
+  --color-fairway-600: var(--color-fairway-600);
+  --color-fairway-700: var(--color-fairway-700);
+  --color-fairway-800: var(--color-fairway-800);
+  --color-fairway-900: var(--color-fairway-900);
+  --color-sky-50: var(--color-sky-50);
+  --color-sky-400: var(--color-sky-400);
+  --color-sand-100: var(--color-sand-100);
+  --color-sand-300: var(--color-sand-300);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
