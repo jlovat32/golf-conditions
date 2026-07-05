@@ -5,7 +5,7 @@ import { logConditionScore } from "@/lib/history";
 import RawWeatherPanel from "@/components/RawWeatherPanel";
 import ConditionsCard from "@/components/ConditionsCard";
 import BookTeeTimeButton from "@/components/BookTeeTimeButton";
-import { saveFavorite } from "./actions";
+import SaveFavoriteForm from "@/components/SaveFavoriteForm";
 
 type CoursePageProps = {
   params: Promise<{ placeId: string }>;
@@ -78,19 +78,13 @@ export default async function CoursePage({ params, searchParams }: CoursePagePro
           <h1 className="text-2xl font-semibold text-fairway-900">{name ?? "Course"}</h1>
           {address && <p className="text-fairway-600">{address}</p>}
         </div>
-        <form action={saveFavorite}>
-          <input type="hidden" name="placeId" value={placeId} />
-          <input type="hidden" name="name" value={name ?? ""} />
-          <input type="hidden" name="address" value={address ?? ""} />
-          <input type="hidden" name="lat" value={lat ?? ""} />
-          <input type="hidden" name="lng" value={lng ?? ""} />
-          <button
-            type="submit"
-            className="whitespace-nowrap rounded-full border border-fairway-200 bg-white px-4 py-2 text-sm font-medium text-fairway-700 transition-colors hover:bg-fairway-50"
-          >
-            ★ Save favorite
-          </button>
-        </form>
+        <SaveFavoriteForm
+          placeId={placeId}
+          name={name ?? ""}
+          address={address ?? ""}
+          lat={lat ?? ""}
+          lng={lng ?? ""}
+        />
       </div>
 
       <p className="text-sm text-fairway-400">

@@ -9,6 +9,8 @@ type Favorite = {
   address: string | null;
   lat: number | null;
   lng: number | null;
+  email: string | null;
+  alert_threshold: number | null;
 };
 
 export default async function FavoritesPage() {
@@ -19,7 +21,7 @@ export default async function FavoritesPage() {
     const supabase = getSupabaseClient();
     const { data, error: queryError } = await supabase
       .from("favorites")
-      .select("place_id, name, address, lat, lng")
+      .select("place_id, name, address, lat, lng, email, alert_threshold")
       .order("created_at", { ascending: false });
 
     if (queryError) throw new Error(queryError.message);
@@ -68,11 +70,18 @@ export default async function FavoritesPage() {
                     <p className="text-sm text-fairway-500">{favorite.address}</p>
                   )}
                 </div>
-                {favorite.score != null && (
-                  <span className="rounded-full bg-fairway-50 px-3 py-1 text-sm font-medium text-fairway-700">
-                    {favorite.score.toFixed(1)} · {scoreLabel(favorite.score)}
-                  </span>
-                )}
+                <div className="flex flex-col items-end gap-1">
+                  {favorite.score != null && (
+                    <span className="rounded-full bg-fairway-50 px-3 py-1 text-sm font-medium text-fairway-700">
+                      {favorite.score.toFixed(1)} · {scoreLabel(favorite.score)}
+                    </span>
+                  )}
+                  {favorite.email && (
+                    <span className="text-xs text-fairway-500">
+                      🔔 Alerts at ≥{Number(favorite.alert_threshold ?? 8).toFixed(1)}
+                    </span>
+                  )}
+                </div>
               </Link>
             </li>
           );
