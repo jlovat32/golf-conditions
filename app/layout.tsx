@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Golf Conditions",
+  title: "Rain Check",
   description: "Golf course condition ratings based on weather",
 };
 

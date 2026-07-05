@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
         }}
       >
         <div style={{ display: "flex", fontSize: 32, color: "#2f6e2b", marginBottom: 16 }}>
-          ⛳ Golf Conditions
+          ⛳ Rain Check
         </div>
         <div style={{ display: "flex", fontSize: 48, color: "#1c391b", fontWeight: 700 }}>
           {name}

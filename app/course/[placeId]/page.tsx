@@ -36,7 +36,7 @@ export async function generateMetadata({
   const ogParams = new URLSearchParams({ name: courseName, score, label });
 
   return {
-    title: `${courseName} — Golf Conditions`,
+    title: `${courseName} — Rain Check`,
     openGraph: {
       title: `${courseName} conditions`,
       images: [`/api/og?${ogParams.toString()}`],
