@@ -4,6 +4,7 @@ import { scoreHourly, bestTeeTimeWindows, scoreLabel, type ScoredHour } from "@/
 import { logConditionScore } from "@/lib/history";
 import RawWeatherPanel from "@/components/RawWeatherPanel";
 import ConditionsCard from "@/components/ConditionsCard";
+import BookTeeTimeButton from "@/components/BookTeeTimeButton";
 import { saveFavorite } from "./actions";
 
 type CoursePageProps = {
@@ -104,6 +105,11 @@ export default async function CoursePage({ params, searchParams }: CoursePagePro
       {scored.length > 0 && (
         <div className="mt-2 flex flex-col gap-4">
           <ConditionsCard current={scored[0]} windows={windows} courseName={name ?? "Course"} />
+          <BookTeeTimeButton
+            courseName={name ?? "Course"}
+            placeId={placeId}
+            score={scored[0].score}
+          />
           <RawWeatherPanel hourly={scored} />
         </div>
       )}
