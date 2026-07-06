@@ -4,6 +4,15 @@ import { scoreLabel } from "@/lib/scoring";
 
 const FROM_EMAIL = process.env.RESEND_FROM_EMAIL ?? "Rain Check <onboarding@resend.dev>";
 
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 function getResendClient(): Resend {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) throw new Error("RESEND_API_KEY is not set");
@@ -31,23 +40,26 @@ export async function sendConditionAlert(params: {
   const { to, courseName, current, windows, unsubscribeUrl, courseUrl } = params;
   const label = scoreLabel(current.score);
   const scoreStr = current.score.toFixed(1);
+  const safeName = escapeHtml(courseName);
+  const safeCourseUrl = escapeHtml(courseUrl);
+  const safeUnsubUrl = escapeHtml(unsubscribeUrl);
 
   const windowsHtml = windows.length
-    ? `<ul>${windows.map((w) => `<li>${formatWindow(w)}</li>`).join("")}</ul>`
+    ? `<ul>${windows.map((w) => `<li>${escapeHtml(formatWindow(w))}</li>`).join("")}</ul>`
     : "<p><em>No standout windows in the forecast.</em></p>";
 
   const html = `
     <div style="font-family: -apple-system, sans-serif; color: #16281d; max-width: 560px;">
-      <h2 style="color: #2f6e2b;">⛳ ${courseName} is looking good</h2>
+      <h2 style="color: #2f6e2b;">⛳ ${safeName} is looking good</h2>
       <p>Conditions right now: <strong>${scoreStr}/10 (${label})</strong></p>
       <p>Weather: ${Math.round(current.tempF)}°F, ${Math.round(current.windMph)} mph wind, ${Math.round(current.precipProbability)}% rain chance</p>
       <h3>Best tee time windows</h3>
       ${windowsHtml}
-      <p><a href="${courseUrl}" style="color: #2f6e2b;">Open in Rain Check →</a></p>
+      <p><a href="${safeCourseUrl}" style="color: #2f6e2b;">Open in Rain Check →</a></p>
       <hr style="border: none; border-top: 1px solid #dcedd9; margin: 24px 0;" />
       <p style="font-size: 12px; color: #5da755;">
-        You're getting this because you set an alert threshold for ${courseName}.
-        <a href="${unsubscribeUrl}" style="color: #5da755;">Unsubscribe</a>
+        You're getting this because you set an alert threshold for ${safeName}.
+        <a href="${safeUnsubUrl}" style="color: #5da755;">Unsubscribe</a>
       </p>
     </div>
   `;

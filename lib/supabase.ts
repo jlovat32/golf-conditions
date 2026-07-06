@@ -1,6 +1,7 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
-let client: SupabaseClient | null = null;
+let anonClient: SupabaseClient | null = null;
+let adminClient: SupabaseClient | null = null;
 
 export function getSupabaseClient(): SupabaseClient {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -10,9 +11,26 @@ export function getSupabaseClient(): SupabaseClient {
     throw new Error("Supabase env vars are not set");
   }
 
-  if (!client) {
-    client = createClient(url, anonKey);
+  if (!anonClient) {
+    anonClient = createClient(url, anonKey);
   }
 
-  return client;
+  return anonClient;
+}
+
+export function getSupabaseAdminClient(): SupabaseClient {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!url || !serviceKey) {
+    throw new Error("SUPABASE_SERVICE_ROLE_KEY is not set");
+  }
+
+  if (!adminClient) {
+    adminClient = createClient(url, serviceKey, {
+      auth: { persistSession: false, autoRefreshToken: false },
+    });
+  }
+
+  return adminClient;
 }

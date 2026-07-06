@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSupabaseClient } from "@/lib/supabase";
+import { getSupabaseAdminClient } from "@/lib/supabase";
 import { getHourlyForecast } from "@/lib/weather";
 import { scoreHourly, bestTeeTimeWindows } from "@/lib/scoring";
 import { sendConditionAlert } from "@/lib/email";
@@ -19,7 +19,11 @@ type FavoriteRow = {
 
 function isAuthorized(request: NextRequest): boolean {
   const secret = process.env.CRON_SECRET;
-  if (!secret) return true; // no secret configured — allow (dev)
+  if (!secret) {
+    // In production this is a misconfiguration — refuse rather than expose
+    // the endpoint. In dev, allow so local testing works.
+    return process.env.NODE_ENV !== "production";
+  }
   const header = request.headers.get("authorization");
   return header === `Bearer ${secret}`;
 }
@@ -39,7 +43,7 @@ export async function GET(request: NextRequest) {
 
   let supabase;
   try {
-    supabase = getSupabaseClient();
+    supabase = getSupabaseAdminClient();
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json({ error: message }, { status: 500 });

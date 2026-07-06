@@ -1,7 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseClient } from "@/lib/supabase";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 export async function POST(request: NextRequest) {
+  const limited = checkRateLimit(request, {
+    prefix: "affiliate-click",
+    limit: 30,
+    windowMs: 60_000,
+  });
+  if (limited) return limited;
+
   const body = await request.json().catch(() => null);
   if (!body || typeof body.partner !== "string") {
     return NextResponse.json({ error: "invalid payload" }, { status: 400 });

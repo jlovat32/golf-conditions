@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSupabaseClient } from "@/lib/supabase";
+import { getSupabaseAdminClient } from "@/lib/supabase";
 
 export async function GET(request: NextRequest) {
   const token = request.nextUrl.searchParams.get("token");
@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const supabase = getSupabaseClient();
+    const supabase = getSupabaseAdminClient();
     const { data, error } = await supabase
       .from("favorites")
       .update({ email: null, last_alerted_at: null })
