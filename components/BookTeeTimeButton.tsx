@@ -4,6 +4,7 @@ type Props = {
   courseName: string;
   placeId: string;
   score: number;
+  placeType: string;
 };
 
 function buildBookingUrl(courseName: string): string | null {
@@ -12,7 +13,11 @@ function buildBookingUrl(courseName: string): string | null {
   return template.replace("{query}", encodeURIComponent(courseName));
 }
 
-export default function BookTeeTimeButton({ courseName, placeId, score }: Props) {
+export default function BookTeeTimeButton({ courseName, placeId, score, placeType }: Props) {
+  // Country clubs / private clubs / resorts don't have GolfNow tee times.
+  // Only show the affiliate booking button for actual golf_course results.
+  if (placeType && placeType !== "golf_course") return null;
+
   const url = buildBookingUrl(courseName);
   if (!url) return null;
 

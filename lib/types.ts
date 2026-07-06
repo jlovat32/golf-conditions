@@ -4,4 +4,5 @@ export type CourseSearchResult = {
   address: string;
   lat: number;
   lng: number;
+  primaryType: string;
 };

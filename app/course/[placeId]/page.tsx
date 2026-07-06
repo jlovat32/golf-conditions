@@ -10,7 +10,7 @@ import SaveFavoriteForm from "@/components/SaveFavoriteForm";
 
 type CoursePageProps = {
   params: Promise<{ placeId: string }>;
-  searchParams: Promise<{ name?: string; address?: string; lat?: string; lng?: string }>;
+  searchParams: Promise<{ name?: string; address?: string; lat?: string; lng?: string; type?: string }>;
 };
 
 export async function generateMetadata({
@@ -48,7 +48,7 @@ export async function generateMetadata({
 
 export default async function CoursePage({ params, searchParams }: CoursePageProps) {
   const { placeId } = await params;
-  const { name, address, lat, lng } = await searchParams;
+  const { name, address, lat, lng, type } = await searchParams;
 
   let scored: ScoredHour[] = [];
   let weatherError: string | null = null;
@@ -110,6 +110,7 @@ export default async function CoursePage({ params, searchParams }: CoursePagePro
             courseName={name ?? "Course"}
             placeId={placeId}
             score={scored[0].score}
+            placeType={type ?? ""}
           />
           <RawWeatherPanel hourly={scored} />
         </div>

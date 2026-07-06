@@ -55,6 +55,7 @@ export default function CourseSearch() {
       address: course.address,
       lat: String(course.lat),
       lng: String(course.lng),
+      type: course.primaryType,
     });
     router.push(`/course/${encodeURIComponent(course.placeId)}?${params.toString()}`);
   }
