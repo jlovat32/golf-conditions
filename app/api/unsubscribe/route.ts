@@ -9,19 +9,29 @@ export async function GET(request: NextRequest) {
 
   try {
     const supabase = getSupabaseAdminClient();
-    const { data, error } = await supabase
-      .from("favorites")
-      .update({ email: null, last_alerted_at: null })
-      .eq("unsubscribe_token", token)
-      .select("name");
 
-    if (error) throw new Error(error.message);
-    if (!data || data.length === 0) {
+    const [favResult, plannedResult] = await Promise.all([
+      supabase.from("favorites").update({ email: null, last_alerted_at: null })
+        .eq("unsubscribe_token", token).select("name"),
+      supabase.from("planned_rounds").delete()
+        .eq("unsubscribe_token", token).select("name"),
+    ]);
+
+    const affected =
+      (favResult.data?.length ?? 0) + (plannedResult.data?.length ?? 0);
+
+    if (favResult.error && plannedResult.error) {
+      throw new Error(favResult.error.message);
+    }
+    if (affected === 0) {
       return new NextResponse("Invalid or expired unsubscribe link.", { status: 404 });
     }
 
+    const name =
+      favResult.data?.[0]?.name ?? plannedResult.data?.[0]?.name ?? "that alert";
+
     return new NextResponse(
-      `<html><body style="font-family:sans-serif;padding:2rem;text-align:center;"><h2>Unsubscribed</h2><p>You will no longer receive condition alerts for <strong>${data[0].name}</strong>.</p></body></html>`,
+      `<html><body style="font-family:sans-serif;padding:2rem;text-align:center;"><h2>Unsubscribed</h2><p>You will no longer receive alerts for <strong>${name}</strong>.</p></body></html>`,
       { headers: { "Content-Type": "text/html" } }
     );
   } catch (error) {

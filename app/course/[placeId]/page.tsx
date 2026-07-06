@@ -7,6 +7,7 @@ import RawWeatherPanel from "@/components/RawWeatherPanel";
 import ConditionsCard from "@/components/ConditionsCard";
 import BookTeeTimeButton from "@/components/BookTeeTimeButton";
 import SaveFavoriteForm from "@/components/SaveFavoriteForm";
+import PlanRoundForm from "@/components/PlanRoundForm";
 
 type CoursePageProps = {
   params: Promise<{ placeId: string }>;
@@ -90,13 +91,22 @@ export default async function CoursePage({ params, searchParams }: CoursePagePro
             <p className="mt-1 text-sm text-fairway-600 sm:text-base">📍 {address}</p>
           )}
         </div>
-        <SaveFavoriteForm
-          placeId={placeId}
-          name={name ?? ""}
-          address={address ?? ""}
-          lat={lat ?? ""}
-          lng={lng ?? ""}
-        />
+        <div className="flex flex-col gap-2 sm:items-end">
+          <SaveFavoriteForm
+            placeId={placeId}
+            name={name ?? ""}
+            address={address ?? ""}
+            lat={lat ?? ""}
+            lng={lng ?? ""}
+          />
+          <PlanRoundForm
+            placeId={placeId}
+            name={name ?? ""}
+            address={address ?? ""}
+            lat={lat ?? ""}
+            lng={lng ?? ""}
+          />
+        </div>
       </div>
 
       {weatherError && (

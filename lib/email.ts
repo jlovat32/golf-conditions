@@ -74,3 +74,66 @@ export async function sendConditionAlert(params: {
 
   if (error) throw new Error(`Resend send failed: ${error.message}`);
 }
+
+export async function sendConditionDropAlert(params: {
+  to: string;
+  courseName: string;
+  teeTime: Date;
+  score: number;
+  threshold: number;
+  tempF: number;
+  windMph: number;
+  precipProbability: number;
+  unsubscribeUrl: string;
+  courseUrl: string;
+}): Promise<void> {
+  const {
+    to,
+    courseName,
+    teeTime,
+    score,
+    threshold,
+    tempF,
+    windMph,
+    precipProbability,
+    unsubscribeUrl,
+    courseUrl,
+  } = params;
+
+  const safeName = escapeHtml(courseName);
+  const safeCourseUrl = escapeHtml(courseUrl);
+  const safeUnsubUrl = escapeHtml(unsubscribeUrl);
+  const teeStr = teeTime.toLocaleString("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  });
+  const scoreStr = score.toFixed(1);
+
+  const html = `
+    <div style="font-family: -apple-system, sans-serif; color: #16281d; max-width: 560px;">
+      <h2 style="color: #c26825;">⚠️ Heads up: conditions dropping for your ${safeName} round</h2>
+      <p>Forecast for your <strong>${teeStr}</strong> tee time now shows <strong>${scoreStr}/10</strong> — below your ${threshold}/10 threshold.</p>
+      <p>Weather at tee time: ${Math.round(tempF)}°F, ${Math.round(windMph)} mph wind, ${Math.round(precipProbability)}% rain chance</p>
+      <p>Might be worth rescheduling.</p>
+      <p><a href="${safeCourseUrl}" style="color: #2f6e2b;">Check the full forecast →</a></p>
+      <hr style="border: none; border-top: 1px solid #dcedd9; margin: 24px 0;" />
+      <p style="font-size: 12px; color: #5da755;">
+        You're getting this because you planned a round at ${safeName}.
+        <a href="${safeUnsubUrl}" style="color: #5da755;">Cancel this alert</a>
+      </p>
+    </div>
+  `;
+
+  const resend = getResendClient();
+  const { error } = await resend.emails.send({
+    from: FROM_EMAIL,
+    to,
+    subject: `⚠️ ${courseName}: forecast dropped to ${scoreStr}/10 for your ${teeStr} tee time`,
+    html,
+  });
+
+  if (error) throw new Error(`Resend send failed: ${error.message}`);
+}
