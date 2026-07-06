@@ -2,11 +2,18 @@
 
 import { useState } from "react";
 
-export default function ShareButton({ title }: { title: string }) {
+type Props = {
+  courseName: string;
+  score: number;
+  label: string;
+};
+
+export default function ShareButton({ courseName, score, label }: Props) {
   const [copied, setCopied] = useState(false);
 
   async function handleShare() {
     const url = window.location.href;
+    const title = `${courseName}: ${score.toFixed(1)}/10 (${label})`;
 
     if (typeof navigator !== "undefined" && navigator.share) {
       try {
@@ -30,9 +37,9 @@ export default function ShareButton({ title }: { title: string }) {
     <button
       type="button"
       onClick={handleShare}
-      className="rounded-full border border-fairway-200 bg-white px-3 py-1.5 text-sm font-medium text-fairway-700 transition-colors hover:bg-fairway-50"
+      className="whitespace-nowrap rounded-full bg-fairway-100 px-4 py-2 text-sm font-semibold text-fairway-700 transition-transform hover:scale-105 active:scale-95"
     >
-      {copied ? "Link copied!" : "Share"}
+      {copied ? "✓ Copied!" : "↗ Share"}
     </button>
   );
 }

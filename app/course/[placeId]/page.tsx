@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { getHourlyForecast } from "@/lib/weather";
 import { scoreHourly, bestTeeTimeWindows, scoreLabel, type ScoredHour } from "@/lib/scoring";
 import { logConditionScore } from "@/lib/history";
@@ -72,11 +73,22 @@ export default async function CoursePage({ params, searchParams }: CoursePagePro
   const windows = scored.length > 0 ? bestTeeTimeWindows(scored) : [];
 
   return (
-    <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-4 px-4 py-12 sm:px-6">
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-semibold text-fairway-900">{name ?? "Course"}</h1>
-          {address && <p className="text-fairway-600">{address}</p>}
+    <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-6 px-4 py-10 sm:px-6 sm:py-14">
+      <Link
+        href="/"
+        className="inline-flex w-fit items-center gap-1 text-sm font-medium text-fairway-600 transition-colors hover:text-fairway-800"
+      >
+        ← Back to search
+      </Link>
+
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="min-w-0">
+          <h1 className="font-display text-3xl font-semibold text-fairway-900 sm:text-4xl">
+            {name ?? "Course"}
+          </h1>
+          {address && (
+            <p className="mt-1 text-sm text-fairway-600 sm:text-base">📍 {address}</p>
+          )}
         </div>
         <SaveFavoriteForm
           placeId={placeId}
@@ -87,17 +99,12 @@ export default async function CoursePage({ params, searchParams }: CoursePagePro
         />
       </div>
 
-      <p className="text-sm text-fairway-400">
-        Place ID: {placeId}
-        {lat && lng ? ` · (${lat}, ${lng})` : ""}
-      </p>
-
       {weatherError && (
-        <p className="rounded-xl bg-red-50 p-4 text-sm text-red-700">{weatherError}</p>
+        <p className="rounded-2xl bg-red-50 p-4 text-sm text-red-700">{weatherError}</p>
       )}
 
       {scored.length > 0 && (
-        <div className="mt-2 flex flex-col gap-4">
+        <div className="flex flex-col gap-4">
           <ConditionsCard current={scored[0]} windows={windows} courseName={name ?? "Course"} />
           <BookTeeTimeButton
             courseName={name ?? "Course"}

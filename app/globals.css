@@ -1,25 +1,29 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f6f8f4;
-  --foreground: #16281d;
+  --background: #fdfcf5;
+  --foreground: #14281d;
 
-  --color-fairway-50: #f1f8f1;
-  --color-fairway-100: #dcedd9;
-  --color-fairway-200: #b8dbb3;
-  --color-fairway-300: #8bc382;
-  --color-fairway-400: #5da755;
-  --color-fairway-500: #3f8a38;
-  --color-fairway-600: #2f6e2b;
-  --color-fairway-700: #275624;
-  --color-fairway-800: #22451f;
-  --color-fairway-900: #1c391b;
+  --color-fairway-50: #f0fbf0;
+  --color-fairway-100: #d5f4d0;
+  --color-fairway-200: #a9e6a0;
+  --color-fairway-300: #7ad46e;
+  --color-fairway-400: #4fbe45;
+  --color-fairway-500: #35a52d;
+  --color-fairway-600: #278222;
+  --color-fairway-700: #216720;
+  --color-fairway-800: #1e5220;
+  --color-fairway-900: #17381a;
 
-  --color-sky-50: #f0f8fb;
-  --color-sky-400: #63b3d8;
+  --color-sun-100: #fff5d1;
+  --color-sun-200: #ffe796;
+  --color-sun-300: #ffd35c;
+  --color-sun-400: #f5b83a;
+  --color-sun-500: #e69818;
 
-  --color-sand-100: #f4ecd8;
-  --color-sand-300: #e3d0a3;
+  --color-sky-100: #dff3fd;
+  --color-sky-300: #82c9ee;
+  --color-sky-500: #2f9dd4;
 }
 
 @theme inline {
@@ -35,16 +39,35 @@
   --color-fairway-700: var(--color-fairway-700);
   --color-fairway-800: var(--color-fairway-800);
   --color-fairway-900: var(--color-fairway-900);
-  --color-sky-50: var(--color-sky-50);
-  --color-sky-400: var(--color-sky-400);
-  --color-sand-100: var(--color-sand-100);
-  --color-sand-300: var(--color-sand-300);
+  --color-sun-100: var(--color-sun-100);
+  --color-sun-200: var(--color-sun-200);
+  --color-sun-300: var(--color-sun-300);
+  --color-sun-400: var(--color-sun-400);
+  --color-sun-500: var(--color-sun-500);
+  --color-sky-100: var(--color-sky-100);
+  --color-sky-300: var(--color-sky-300);
+  --color-sky-500: var(--color-sky-500);
   --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-fredoka);
 }
 
 body {
-  background: var(--background);
+  background:
+    radial-gradient(1200px 800px at 15% -10%, #d5f4d0 0%, transparent 55%),
+    radial-gradient(1000px 700px at 110% 10%, #fff5d1 0%, transparent 50%),
+    var(--background);
+  background-attachment: fixed;
   color: var(--foreground);
-  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
 }
+
+h1, h2, h3, .font-display {
+  font-family: var(--font-display), system-ui, sans-serif;
+  letter-spacing: -0.01em;
+}
+
+@keyframes bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+.animate-bob { animation: bob 3s ease-in-out infinite; }

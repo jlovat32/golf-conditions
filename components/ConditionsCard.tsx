@@ -9,11 +9,21 @@ function formatHour(time: string) {
   return `${weekday} ${hour}`;
 }
 
-function scoreColor(score: number) {
-  if (score >= 8.5) return "text-fairway-600";
-  if (score >= 7) return "text-fairway-500";
-  if (score >= 5) return "text-sand-300";
-  return "text-red-500";
+function scoreEmoji(score: number) {
+  if (score >= 8.5) return "☀️";
+  if (score >= 7) return "⛅";
+  if (score >= 5) return "🌥️";
+  return "🌧️";
+}
+
+function scoreRingClasses(score: number) {
+  if (score >= 8.5)
+    return "bg-gradient-to-br from-fairway-400 to-fairway-600 text-white shadow-fairway-300/50";
+  if (score >= 7)
+    return "bg-gradient-to-br from-sun-300 to-fairway-400 text-white shadow-sun-300/50";
+  if (score >= 5)
+    return "bg-gradient-to-br from-sun-300 to-sun-500 text-white shadow-sun-300/50";
+  return "bg-gradient-to-br from-sky-300 to-sky-500 text-white shadow-sky-300/50";
 }
 
 export default function ConditionsCard({
@@ -25,58 +35,85 @@ export default function ConditionsCard({
   windows: TeeTimeWindow[];
   courseName: string;
 }) {
+  const label = scoreLabel(current.score);
+  const emoji = scoreEmoji(current.score);
+
   return (
-    <div className="rounded-2xl border border-fairway-100 bg-white p-6 shadow-sm">
-      <div className="flex items-start justify-between">
-        <div>
-          <p className="text-sm font-medium text-fairway-500">Current conditions</p>
-          <div className="flex items-baseline gap-2">
-            <span className={`text-4xl font-semibold ${scoreColor(current.score)}`}>
+    <div className="rounded-[2rem] border border-white/70 bg-white/90 p-6 shadow-2xl shadow-fairway-200/40 backdrop-blur-sm sm:p-8">
+      <div className="flex flex-col items-center gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-5">
+          <div
+            className={`flex h-24 w-24 items-center justify-center rounded-full shadow-xl ${scoreRingClasses(current.score)}`}
+          >
+            <span className="font-display text-4xl font-bold">
               {current.score.toFixed(1)}
             </span>
-            <span className="text-lg text-fairway-400">/ 10</span>
-            <span className="ml-1 rounded-full bg-fairway-50 px-3 py-1 text-sm font-medium text-fairway-700">
-              {scoreLabel(current.score)}
-            </span>
+          </div>
+          <div>
+            <p className="text-sm font-medium uppercase tracking-wider text-fairway-500">
+              Right now
+            </p>
+            <p className="font-display text-3xl font-semibold text-fairway-900">
+              {emoji} {label}
+            </p>
           </div>
         </div>
         <ShareButton
-          title={`${courseName}: ${current.score.toFixed(1)}/10 (${scoreLabel(current.score)}) conditions`}
+          courseName={courseName}
+          score={current.score}
+          label={label}
         />
       </div>
 
-      <dl className="mt-4 grid grid-cols-3 gap-3 text-sm text-fairway-700">
-        <div>
-          <dt className="text-fairway-400">Temp</dt>
-          <dd className="font-medium">{Math.round(current.tempF)}°F</dd>
+      <dl className="mt-6 grid grid-cols-3 gap-3 text-center">
+        <div className="rounded-2xl bg-fairway-50 px-3 py-4">
+          <dt className="text-xs font-medium uppercase tracking-wider text-fairway-500">
+            Temp
+          </dt>
+          <dd className="mt-1 font-display text-2xl font-semibold text-fairway-900">
+            {Math.round(current.tempF)}°
+          </dd>
         </div>
-        <div>
-          <dt className="text-fairway-400">Wind</dt>
-          <dd className="font-medium">{Math.round(current.windMph)} mph</dd>
+        <div className="rounded-2xl bg-sky-100 px-3 py-4">
+          <dt className="text-xs font-medium uppercase tracking-wider text-sky-500">
+            Wind
+          </dt>
+          <dd className="mt-1 font-display text-2xl font-semibold text-fairway-900">
+            {Math.round(current.windMph)}
+            <span className="text-sm text-fairway-500"> mph</span>
+          </dd>
         </div>
-        <div>
-          <dt className="text-fairway-400">Rain chance</dt>
-          <dd className="font-medium">{Math.round(current.precipProbability)}%</dd>
+        <div className="rounded-2xl bg-sun-100 px-3 py-4">
+          <dt className="text-xs font-medium uppercase tracking-wider text-sun-500">
+            Rain
+          </dt>
+          <dd className="mt-1 font-display text-2xl font-semibold text-fairway-900">
+            {Math.round(current.precipProbability)}%
+          </dd>
         </div>
       </dl>
 
-      <div className="mt-5 border-t border-fairway-50 pt-4">
-        <p className="text-sm font-medium text-fairway-500">Best tee time windows</p>
+      <div className="mt-6">
+        <p className="mb-3 text-sm font-semibold uppercase tracking-wider text-fairway-500">
+          ⏰ Best tee times
+        </p>
         {windows.length === 0 ? (
-          <p className="mt-1 text-sm text-fairway-400">
-            No standout windows in the forecast right now.
+          <p className="rounded-2xl bg-fairway-50 px-4 py-3 text-sm text-fairway-500">
+            No standout windows in the next 24 hours.
           </p>
         ) : (
-          <ul className="mt-2 flex flex-col gap-1.5">
+          <ul className="flex flex-col gap-2">
             {windows.map((window) => (
               <li
                 key={window.start}
-                className="flex items-center justify-between rounded-lg bg-fairway-50 px-3 py-2 text-sm text-fairway-800"
+                className="flex items-center justify-between rounded-2xl bg-gradient-to-r from-fairway-100 to-fairway-50 px-4 py-3"
               >
-                <span>
+                <span className="font-medium text-fairway-900">
                   {formatHour(window.start)} – {formatHour(window.end)}
                 </span>
-                <span className="font-medium text-fairway-600">{window.avgScore.toFixed(1)}</span>
+                <span className="rounded-full bg-white/70 px-3 py-1 font-display text-sm font-semibold text-fairway-700">
+                  {window.avgScore.toFixed(1)}
+                </span>
               </li>
             ))}
           </ul>

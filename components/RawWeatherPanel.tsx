@@ -10,27 +10,27 @@ export default function RawWeatherPanel({ hourly }: { hourly: HourlyWeather[] })
   }
 
   return (
-    <details className="rounded-2xl border border-fairway-100 bg-white p-4">
-      <summary className="cursor-pointer text-sm font-medium text-fairway-600">
-        Raw hourly forecast
+    <details className="rounded-3xl border border-fairway-100 bg-white/70 p-5 backdrop-blur-sm">
+      <summary className="cursor-pointer text-sm font-semibold text-fairway-600 marker:text-fairway-400">
+        📊 Hour-by-hour forecast
       </summary>
-      <div className="mt-3 overflow-x-auto">
+      <div className="mt-4 overflow-x-auto">
         <table className="w-full min-w-[420px] text-left text-sm">
           <thead>
-            <tr className="text-fairway-500">
-              <th className="pb-2 pr-4 font-medium">Time</th>
-              <th className="pb-2 pr-4 font-medium">Temp</th>
-              <th className="pb-2 pr-4 font-medium">Wind</th>
-              <th className="pb-2 font-medium">Rain chance</th>
+            <tr className="text-xs font-semibold uppercase tracking-wider text-fairway-500">
+              <th className="pb-2 pr-4">Time</th>
+              <th className="pb-2 pr-4">Temp</th>
+              <th className="pb-2 pr-4">Wind</th>
+              <th className="pb-2">Rain</th>
             </tr>
           </thead>
           <tbody>
             {hourly.slice(0, 24).map((hour) => (
               <tr key={hour.time} className="border-t border-fairway-50 text-fairway-800">
-                <td className="py-1.5 pr-4">{formatHour(hour.time)}</td>
-                <td className="py-1.5 pr-4">{Math.round(hour.tempF)}°F</td>
-                <td className="py-1.5 pr-4">{Math.round(hour.windMph)} mph</td>
-                <td className="py-1.5">{Math.round(hour.precipProbability)}%</td>
+                <td className="py-2 pr-4 font-medium">{formatHour(hour.time)}</td>
+                <td className="py-2 pr-4">{Math.round(hour.tempF)}°</td>
+                <td className="py-2 pr-4">{Math.round(hour.windMph)} mph</td>
+                <td className="py-2">{Math.round(hour.precipProbability)}%</td>
               </tr>
             ))}
           </tbody>
