@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import CourseSearch from "@/components/CourseSearch";
 
 export default function Home() {
@@ -19,7 +20,9 @@ export default function Home() {
           and pick your best window.
         </p>
 
-        <CourseSearch />
+        <Suspense fallback={<div className="h-16 w-full max-w-xl animate-pulse rounded-full bg-white/60" />}>
+          <CourseSearch />
+        </Suspense>
 
         <div className="mt-4 flex flex-wrap items-center justify-center gap-2 text-xs text-fairway-500">
           <span>Try:</span>
